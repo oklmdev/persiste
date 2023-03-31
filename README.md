@@ -59,3 +59,18 @@ Une chose est sure c'est **une application web de photos**. Donc on peut partir 
 
 Je vous avais prévenus qu'il faudrait travailler dans l'incertitude. Mais c'est le cas plus ou moins de tous les projets, non ?
 
+
+#### Et la stack technique
+
+Je ne veux pas prendre de risque, je n'utilise que des technos que je maitrise bien. Peu importe les perfs.  
+
+Pas de framework "magique" qui prend la main sur tout et introduit des incompatibilités.
+
+- Typescript
+- Node/Express
+- React/Tailwind
+- Jest/Storybook
+- Postgresql
+- Déployé en continu sur un PaaS (Scalingo)
+
+Mais honnêtement, nous allons rester dans des choses très simples donc il est possible de suivre sans connaitre ces technos.
