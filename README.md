@@ -1,8 +1,12 @@
 # Persistence OKLM
 Comment démarrer un projet sans passer par la case modélisation de données ?
 
-### Contexte
+<details>
+  <summary>Afficher le contexte du projet</summary>
 
+### Contexte
+  
+  
 - Je démarre un **nouveau projet**.
 - Mon client peut parler des heures de son projet mais en réalité a une **idée très vague** du produit.
 - Il a déjà des utilisateurs pour tester et **il veut leur montrer un truc aujourd'hui** (l'idéal aurait été hier mais bon...).
@@ -80,3 +84,20 @@ Mais honnêtement, nous allons rester dans des choses très simples donc il est 
 Je crée une branche pour suivre l'avancée chaque jour.  
 
 Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
+</details>
+
+## Jour 1
+
+Qu'est-ce qu'une app de photos sans mécanisme d'upload de photo ?
+
+### Page d'upload de photo
+
+A chaud, je dirais qu'il nous faut:
+- Une page avec un formulaire pour que l'utilisateur sélectionne une image à uploader
+- Un point d'entrée back pour afficher cette page
+- ...
+
+✋🙈 STOP! Evitons de produire un backlog, faisons plutôt des petits pas ! 🐣
+
+#### Formulaire d'upload
+Pour créer une nouvelle vue, je n'ai besoin que d'un composant React et de Storybook pour l'essayer.
