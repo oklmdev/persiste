@@ -1,0 +1,117 @@
+{
+	// Place your oklm-persistence workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"React Component With Typed Props": {
+		"scope": "typescriptreact",
+    "prefix": "rct",
+    "body": [
+      "import React from 'react'",
+      "",
+      "type ${TM_FILENAME_BASE}Props = {",
+      "  $1",
+      "}",
+      "",
+      "export const ${TM_FILENAME_BASE} = ({${2}}: ${TM_FILENAME_BASE}Props) => {",
+      "  return (",
+      "    <div>",
+      "      ${3}",
+      "    </div>",
+      "  );",
+      "};",
+    ],
+    "description": "Create a React Function Component with TypeScript and typed props"
+  },
+  "Stories for React Component With Typed Props": {
+		"scope": "typescriptreact",
+    "prefix": "strc",
+    "body": [
+      "import React from 'react'",
+      "import { ${TM_FILENAME_BASE/(.*)\\..+$/$1/} } from './${TM_FILENAME_BASE/(.*)\\..+$/$1/}'",
+      "",
+      "export default { title: \"${TM_FILENAME_BASE/(.*)\\..+$/$1/}\", component: ${TM_FILENAME_BASE/(.*)\\..+$/$1/} }",
+      "",
+      "export const primary = () => <${TM_FILENAME_BASE/(.*)\\..+$/$1/} />",
+    ],
+    "description": "Create a Storybook file for a React Component"
+  },
+  "Route for View": {
+		"scope": "typescript",
+    "prefix": "rteg",
+    "body": [
+      "import express from 'express'",
+      "",
+      "import { isUserAuthenticated } from '../auth/isUserAuthenticated'",
+      "import { ${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page } from './${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page'",
+      "import { responseAsHtml } from '../utils/responseAsHtml'",
+      "",
+      "export const ${TM_FILENAME_BASE/(.*)\\..+$/$1/}Router = express.Router()",
+      "",
+      "${TM_FILENAME_BASE/(.*)\\..+$/$1/}Router.route('/${1:${TM_FILENAME_BASE/(.*)\\..+$/$1/}.html}').get(async (_, response) => {",
+      "if (!isUserAuthenticated(request, response)) return",
+      "return responseAsHtml(${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page(), { response })",
+      "})",
+    ],
+    "description": "Create an express route for a view."
+  },
+  "Route for View and Form": {
+		"scope": "typescript",
+    "prefix": "rtegp",
+    "body": [
+      "import express from 'express'",
+      "import z, { ZodError } from 'zod'",
+      "import { parseZodErrors } from '../utils/parseZodErrors'",
+      "import { isUserAuthenticated } from '../auth/isUserAuthenticated'",
+      "import { ${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page } from './${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page'",
+      "import { responseAsHtml } from '../utils/responseAsHtml'",
+      "",
+      "export const ${TM_FILENAME_BASE/(.*)\\..+$/$1/}Router = express.Router()",
+      "",
+      "${TM_FILENAME_BASE/(.*)\\..+$/$1/}Router.route('/${1:${TM_FILENAME_BASE/(.*)\\..+$/$1/}.html}').get(async (_, response) => {",
+      "if (!isUserAuthenticated(request, response)) return",
+      "return responseAsHtml(${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page(), { response })",
+      "})",
+      ".post(async (request, response) => {",
+      "if (!isUserAuthenticated(request, response)) return",
+      "try {",
+      "const {} = z",
+      ".object({",
+      "// itemId: z.string().uuid(),",
+      "// description: z.string()",
+      "})",
+      ".parse(request.body)",
+      "} catch (error: any) {",
+      "let formattedError: Record<string, string> = {}",
+      "",
+      "if (error instanceof ZodError) {",
+      "formattedError = parseZodErrors(error)",
+      "} else {",
+      "console.error(error)",
+      "formattedError = { other: 'Unknown error' }",
+      "}",
+      "",
+      "return responseAsHtml(",
+      "${TM_FILENAME_BASE/(.*)\\..+$/${1:/capitalize}/}Page({",
+      "// errors: formattedError",
+      "}),",
+      "{ response }",
+      ")",
+      "}",
+      "})",
+    ],
+    "description": "Create an express route for a view and a form handler."
+  }
+}

@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=photos_oklm
+    restart: always
+    container_name: photos_oklm_db_dev
+    ports:
+      - 5401:5432
