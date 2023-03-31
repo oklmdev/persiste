@@ -9,5 +9,8 @@
   "env": {
     "NODE_ENV": "development"
   },
+  "events":{
+    "restart": "yarn postcss"
+  },
   "ext": "js,json,ts"
 }

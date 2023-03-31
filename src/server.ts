@@ -25,7 +25,7 @@ app.use(
 app.use(express.json({ limit: '10mb' }))
 
 app.get('/ping', (_: express.Request, response: express.Response): void => {
-  response.send('pong')
+  response.send('ping')
 })
 
 app.use(
