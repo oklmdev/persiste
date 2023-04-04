@@ -17,17 +17,16 @@ export const AddNewPhotoPage = ({}: AddNewPhotoPageProps) => {
           <div className='flex items-center justify-center'>
             <label
               htmlFor='image-upload'
-              className='w-full sm:w-sm text-center relative cursor-pointer bg-white px-3 py-5 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500'
-            >
-              <span>Choose an image file</span>
-              <input id='image-upload' name='image' type='file' accept='image/*' className='sr-only' />
+              className='w-full sm:w-sm text-center relative cursor-pointer bg-white px-3 py-5 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500'>
+              <input id='image-upload' name='image' type='file' accept='image/*' className='sr-only peer' required />
+              <span className='peer-valid:hidden'>Choose an image file</span>
+              <span className='text-green-700 hidden peer-valid:inline'>Image selected !</span>
             </label>
           </div>
           <div className='mt-6 flex justify-center'>
             <button
               type='submit'
-              className='w-full sm:w-sm py-2 px-4 border border-transparent rounded-md shadow-sm text-white font-medium bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-            >
+              className='w-full sm:w-sm py-2 px-4 border border-transparent rounded-md shadow-sm text-white font-medium bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
               Upload
             </button>
           </div>
@@ -44,8 +43,7 @@ const LockClosedIcon = () => (
     viewBox='0 0 24 24'
     strokeWidth={1.5}
     stroke='currentColor'
-    className='w-6 h-6 inline-block'
-  >
+    className='w-6 h-6 inline-block'>
     <path
       strokeLinecap='round'
       strokeLinejoin='round'
