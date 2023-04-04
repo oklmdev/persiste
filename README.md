@@ -101,3 +101,11 @@ A chaud, je dirais qu'il nous faut:
 
 #### Formulaire d'upload
 Pour créer une nouvelle vue, je n'ai besoin que d'un composant React et de Storybook pour l'essayer.
+
+Je crée un dossier `AddNewPhotoPage` avec deux fichiers `AddNewPhotoPage.tsx` et `AddNewPhotoPage.stories.tsx`.
+
+Je commence par faire quelques allers-retours avec ChatGPT, que j'essaye avec Storybook.  
+En quelques minutes, j'ai une page visuellement passable.
+
+> Remarquez que j'ai choisi d'utiliser des termes métier ("Add new photo") plutot que des termes techniques ("Formulaire d'upload d'image"). C'est subtil mais ca sera plus facile en discussion d'équipe.
+
