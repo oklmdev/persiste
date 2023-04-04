@@ -105,7 +105,22 @@ Pour créer une nouvelle vue, je n'ai besoin que d'un composant React et de Stor
 Je crée un dossier `AddNewPhotoPage` avec deux fichiers `AddNewPhotoPage.tsx` et `AddNewPhotoPage.stories.tsx`.
 
 Je commence par faire quelques allers-retours avec ChatGPT, que j'essaye avec Storybook.  
-En quelques minutes, j'ai une page visuellement passable.
+En quelques minutes, j'ai une page visuellement passable ([AddNewPhotoPage.tsx](./src/AddNewPhotoPage/AddNewPhotoPage.tsx)).
 
-> Remarquez que j'ai choisi d'utiliser des termes métier ("Add new photo") plutot que des termes techniques ("Formulaire d'upload d'image"). C'est subtil mais ca sera plus facile en discussion d'équipe.
+> Remarquez que j'ai choisi d'utiliser des termes métier ("Add new photo") plutot que des termes techniques ("Formulaire d'upload d'image").
+> 
+> C'est subtil mais ça sera plus facile en discussion d'équipe.
+
+On arrive ici : [7f79336d967a532d7f830b31dd393375704026db](7f79336d967a532d7f830b31dd393375704026db).
+
+Cette page n'est pas encore accessible aux utilisateurs. Il faut lui donner une route et rajouter un lien sur la page d'accueil.  
+Cette logique est gérée le fichier [addNewPhoto.route.ts](./src/AddNewPhotoPage/addNewPhoto.route.ts).
+
+> Notre route ne retourne que du HTML tout simple (via le petit utilitaire local [responseAsHtml](./src/utils/responseAsHtml.ts), que je vous invite à lire).  
+>
+> En effet, ce n'est pas une SPA, il n'y même pas encore de javascript executé coté front.  
+> 
+> Pour rester au plus simple, toute la logique est gérée coté back. Le reste est géré avec des simples liens, des formulaires, etc.  
+>
+> Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris 😆.
 
