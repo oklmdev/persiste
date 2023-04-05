@@ -18,7 +18,7 @@ export const AddNewPhotoPage = ({}: AddNewPhotoPageProps) => {
             <label
               htmlFor='image-upload'
               className='w-full sm:w-sm text-center relative cursor-pointer bg-white px-3 py-5 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500'>
-              <input id='image-upload' name='image' type='file' accept='image/*' className='sr-only peer' required />
+              <input id='image-upload' name='photo' type='file' accept='image/*' className='sr-only peer' required />
               <span className='peer-valid:hidden'>Choose an image file</span>
               <span className='text-green-700 hidden peer-valid:inline'>Image selected !</span>
             </label>
