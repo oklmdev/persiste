@@ -123,4 +123,9 @@ Cette logique est gérée le fichier [addNewPhoto.route.ts](./src/AddNewPhotoPag
 > Pour rester au plus simple, toute la logique est gérée coté back. Le reste est géré avec des simples liens, des formulaires, etc.  
 >
 > Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris 😆.
+> 
+> Mais ceci n'est pas le sujet !
 
+#### Sauvegarde de la photo
+
+Branchons maintenant sur un système de persistence de fichiers. Je prends ce que j'ai sous la main, qui permet d'uploader en local ou sur S3.
