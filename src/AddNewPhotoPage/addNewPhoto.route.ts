@@ -7,6 +7,8 @@ import { AddNewPhotoPage } from './AddNewPhotoPage'
 import { responseAsHtml } from '../utils/responseAsHtml'
 import { uploadPhoto } from '../utils/photoStorage'
 import { getUuid } from '../utils/getUuid'
+import { addToHistory } from '../utils/addToHistory'
+import { NewPhotoAdded } from './NewPhotoAdded'
 
 const MB = 1024 * 1024
 const upload = multer({
@@ -28,6 +30,12 @@ addNewPhotoRouter
     if (file) {
       console.log('Got file')
       await uploadPhoto({ contents: fs.createReadStream(file.path), id: photoId })
+      await addToHistory(
+        NewPhotoAdded({
+          photoId,
+          addedBy: request.session.user!.id,
+        })
+      )
     } else {
       console.log('no file')
     }
