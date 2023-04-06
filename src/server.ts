@@ -9,6 +9,7 @@ import { helloWorldRouter } from './HelloWorldPage/helloWorld.route'
 import { createUsersTable } from './auth/createUsersTable'
 import { authRouter } from './auth/auth.route'
 import { addNewPhotoRouter } from './AddNewPhotoPage/addNewPhoto.route'
+import { createHistoryTable } from './utils/addToHistory'
 
 const pgSession = connectPgSimple(session)
 
@@ -51,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'static')))
 const port = parseInt(PORT ?? '3000')
 app.listen(port, async () => {
   await createUsersTable()
+  await createHistoryTable()
   // eslint-disable-next-line no-console
   console.log('Server listening to port', port)
 })
