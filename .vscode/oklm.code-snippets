@@ -113,5 +113,23 @@
       "})",
     ],
     "description": "Create an express route for a view and a form handler."
+  },
+  "Fact description file": {
+		"scope": "typescript",
+    "prefix": "fact",
+    "body": [
+      "import { Fact, makeFact } from '../utils/addToHistory'",
+      "",
+      "export type $1 = Fact<",
+      "  '$1',",
+      "  {",
+      "    ${2}Id: ${3:string}",
+      "    $0",
+      "  }",
+      ">",
+      "",
+      "export const $1 = makeFact<$1>('$1')"
+    ],
+    "description": "Create a fact description file"
   }
 }

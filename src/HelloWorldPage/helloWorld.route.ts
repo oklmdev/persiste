@@ -1,12 +1,12 @@
 import express from 'express'
-import { isUserAuthenticated } from '../auth/isUserAuthenticated'
+import { requireAuth } from '../auth/requireAuth'
 import { responseAsHtml } from '../utils/responseAsHtml'
 import { HelloWorldPage } from './HelloWorld'
 
 export const helloWorldRouter = express.Router()
 
-helloWorldRouter.route('/').get(async (request, response) => {
-  if (!isUserAuthenticated(request, response)) return
-
-  return responseAsHtml(HelloWorldPage(), { response })
-})
+helloWorldRouter.route('/').get(
+  requireAuth(async (_, response) => {
+    return responseAsHtml(HelloWorldPage(), { response })
+  })
+)
