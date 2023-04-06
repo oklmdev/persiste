@@ -74,3 +74,9 @@ Pas de framework "magique" qui prend la main sur tout et introduit des incompati
 - Déployé en continu sur un PaaS (Scalingo)
 
 Mais honnêtement, nous allons rester dans des choses très simples donc il est possible de suivre sans connaitre ces technos.
+
+### Attaquons !
+
+Je crée une branche pour suivre l'avancée chaque jour.  
+
+Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
