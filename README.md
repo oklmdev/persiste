@@ -294,3 +294,30 @@ type NewPhotoAdded = Fact<
   }
 >
 ```
+
+#### Récapitulons
+
+Nous avons
+- un formulaire html pour uploader une photo,
+- de quoi stocker la photo,
+- et de quoi persister ce qui s'est passé.
+
+Pour la persistence, nous avons utilisé une stratégie alternative: nous sauvegardons des faits dans une seule table historique. Chaque *fait* demande une conception, n'avons nous pas échangé une modélisation de données pour une autre ?
+
+Pas tout à fait. La persistence sous forme de faits présente des avantages que nous allons voir dans la suite.
+
+Remarquons déjà:
+- Les différents faits sont déclarés dans des fichiers typescript
+  - Leur forme n'a pas de réalité dans la base de données
+- Nous sommes libres de modifier la forme des faits ou d'en rajouter, sans un seul appel sql (pas de migration)
+- La table historique est destinée à être en lecture seule
+  - Pas de perte de données possible !
+
+Mais pour l'instant, nous n'avons vu que l'aspect insertion, continuons plutôt notre exercice pour voir comment se présente le reste.
+
+### Page pour afficher la photo
+
+- Créons une page `PhotoPage.tsx` et testons la avec Storybook
+- Ajoutons une route `photo.route.ts` qui affiche la page `PhotoPage.tsx` (après une vérification sommaire)
+  - Nous faisons un select directement sur la table `history` pour vérifier que la photo existe
+- Redirigeons sur la route photo après chaque ajout de nouvelle photo
