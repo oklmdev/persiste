@@ -8,7 +8,7 @@ import { getUuid } from '../utils/getUuid'
 import { uploadPhoto } from '../utils/photoStorage'
 import { responseAsHtml } from '../utils/responseAsHtml'
 import { AddNewPhotoPage } from './AddNewPhotoPage'
-import { NewPhotoAdded } from './NewPhotoAdded'
+import { ANewPhotoHasBeenAddedByAUser } from './ANewPhotoHasBeenAddedByAUser'
 
 const MB = 1024 * 1024
 const upload = multer({
@@ -32,10 +32,11 @@ addNewPhotoRouter
       const { file } = request
       const photoId = getUuid()
       if (file) {
-        await uploadPhoto({ contents: fs.createReadStream(file.path), id: photoId })
+        const location = await uploadPhoto({ contents: fs.createReadStream(file.path), id: photoId })
         await addToHistory(
-          NewPhotoAdded({
+          ANewPhotoHasBeenAddedByAUser({
             photoId,
+            location,
             addedBy: request.session.user.id,
           })
         )
@@ -43,6 +44,6 @@ addNewPhotoRouter
         return response.send('Missing photo file ! Same player try again.')
       }
 
-      return response.send('Success !')
+      return response.redirect(`/photo/${photoId}/page.html`)
     })
   )
