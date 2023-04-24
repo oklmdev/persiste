@@ -10,6 +10,7 @@ import { createUsersTable } from './auth/createUsersTable'
 import { authRouter } from './auth/auth.route'
 import { addNewPhotoRouter } from './AddNewPhotoPage/addNewPhoto.route'
 import { createHistoryTable } from './utils/addToHistory'
+import { photoRouter } from './PhotoPage/photo.route'
 
 const pgSession = connectPgSimple(session)
 
@@ -42,6 +43,7 @@ app.use(
 app.use(authRouter)
 app.use(helloWorldRouter)
 app.use(addNewPhotoRouter)
+app.use(photoRouter)
 
 app.get('/ping', (_: express.Request, response: express.Response): void => {
   response.send('ping')

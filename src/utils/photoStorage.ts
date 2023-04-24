@@ -3,9 +3,19 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { PHOTO_ACCESS_KEY_ID, PHOTO_SECRET_ACCESS_KEY, PHOTO_ENDPOINT, PHOTO_BUCKET, PHOTO_STORAGE } from '../env'
 
+type PhotoLocation =
+  | {
+      type: 'S3'
+      bucket: string
+      endpoint: string
+      key: string
+    }
+  | { type: 'localfile' }
+
 type UUID = string
 let downloadPhoto: (photoId: UUID) => NodeJS.ReadableStream = downloadPhotoLocally
-let uploadPhoto: (args: UploadPhotoArgs) => Promise<unknown> = uploadPhotoLocally
+
+let uploadPhoto: (args: UploadPhotoArgs) => Promise<PhotoLocation> = uploadPhotoLocally
 
 if (PHOTO_STORAGE === 'S3') {
   const credentials = new aws.Credentials(PHOTO_ACCESS_KEY_ID, PHOTO_SECRET_ACCESS_KEY)
@@ -18,6 +28,13 @@ if (PHOTO_STORAGE === 'S3') {
 
   uploadPhoto = async ({ contents, id }: UploadPhotoArgs) => {
     await s3client.upload({ Bucket: PHOTO_BUCKET, Key: id, Body: contents }).promise()
+
+    return {
+      type: 'S3',
+      bucket: PHOTO_BUCKET,
+      endpoint: PHOTO_ENDPOINT,
+      key: id,
+    }
   }
 }
 
@@ -35,7 +52,7 @@ type UploadPhotoArgs = {
 }
 async function uploadPhotoLocally({ contents, id }: UploadPhotoArgs) {
   const filePath = localFilePath(id)
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     const uploadWriteStream = fs.createWriteStream(filePath, {
       autoClose: true,
     })
@@ -43,4 +60,6 @@ async function uploadPhotoLocally({ contents, id }: UploadPhotoArgs) {
     uploadWriteStream.on('close', resolve)
     contents.pipe(uploadWriteStream)
   })
+
+  return { type: 'localfile' as const }
 }
