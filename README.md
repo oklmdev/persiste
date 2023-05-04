@@ -26,50 +26,34 @@ Ce qui nous amène à notre premier défi...
 
 Dans mon expérience, **les équipes perdent du temps lors de la modélisation des données**. Nous nous mettons, par exemple, d'accord sur des schéma de tables en nous basant sur des suppositions d'usage futur.
 
-Et comme il y a enormément d'**incertitudes**, et qu'on a des données en prod, il est nécessaire de faire des scripts de migrations à chaque changement. **Nous payons double chaque changement !**
+Et comme il y a enormément d'**incertitudes**, et qu'on a des données en prod, il est nécessaire de faire des scripts de migrations à chaque changement. Nous devons faire **un double effort** pour chaque changement (sur la structure et sur les données).
 
-Intuitivement, ce phénomène désagréable nous incite à éviter les refontes coté code, adapter le code existant pour un nouvel usage, et **la dette technique s'installe**...
+Ces efforts, à la longue, risquent de nous dissuader de faire ces changements, ou du moins, de les faire convenablement, pour garder notre *"vélocité"*. **La dette technique s'installe**...
 
 Mais comment faire autrement ?
 
 ### Vers une autre solution
 
-Prenons le temps de ce moment pour imaginer une solution alternative. Nous ne sommes pas (encore) dans le stress et n'avons pas (encore) le nez dans le guidon.
-
-Ce ne sera qu'un exercice de l'imagination, OKLM.
-
 #### Le contrat
 
-Voici les objectifs de la solution à trouver:
+Voici un résumé des contraintes:
 
-- **Pas de réunion de modélisation de données**
-  - Je dois pouvoir inclure toute l'équipe et tout le monde ne connait pas le SQL, l'UML, les entités, ... On reste dans les termes métier !
-- **Pas de script de migration**
-- **Pas de perte de données**
-
-Infaisable ? Allez, je précise quelque chose qui rendra peut-être la tâche plus accessible:
-
-- **Pas d'objectif en terme de perfs**
-   - Il est toujours trop tôt mais jamais trop tard pour optimiser.
+- Nous incluerons toute l'équipe et comme tout le monde ne connait pas le SQL, l'UML, les entités, nous restons dans le vocabulaire du produit
+  - donc **pas de réunion de modélisation de données**
+- Un changement dans le code ne doit pas répresenter une source de friction pour préserver les données
+  - donc **pas de script de migration**
+- Il est toujours trop tôt mais jamais trop tard pour optimiser
+  - donc **pas d'optimisation des performances** avant d'avoir mesuré un impact
+- Nous ne voulons pas de perte de données
+  - donc **pas de perte de données**
 
 #### Quelques mots sur le produit
 
-Alors, je me suis un peu perdu dans les explications du client, et les autres membres de l'équipe aussi...
-
-Il est parti un peu vite de la réunion (un avion à prendre ?) et n'est pas joignable pour répondre à nos questions avant demain.
-
-Cela dit, il nous a promis de nous consacrer 5 min chaque jour pour nous faire des retours. Pour le reste, il faudra voir avec les utilisateurs.
-
-Une chose est sure c'est **une application web de photos**. Donc on peut partir sur ça et construire au fur et à mesure.
-
-Je vous avais prévenus qu'il faudrait travailler dans l'incertitude. Mais c'est le cas plus ou moins de tous les projets, non ?
-
+Le client souhaite une application web où les utilisateurs pourront s'échanger des photos.
 
 #### Et la stack technique
 
-Je ne veux pas prendre de risque, je n'utilise que des technos que je maitrise bien. Peu importe les perfs.  
-
-Pas de framework "magique" qui prend la main sur tout et introduit des incompatibilités.
+Utilisons des technos maitrisées par l'équipe.
 
 - Typescript
 - Node/Express
@@ -78,32 +62,24 @@ Pas de framework "magique" qui prend la main sur tout et introduit des incompati
 - Postgresql
 - Déployé en continu sur un PaaS (Scalingo)
 
-Mais honnêtement, nous allons rester dans des choses très simples donc il est possible de suivre sans connaitre ces technos.
-
 ### Attaquons !
 
-Je crée une branche pour suivre l'avancée chaque jour.  
-
-Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
+> Je crée une branche pour suivre l'avancée chaque jour.  
+>
+> Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
 </details>
 
 ## Jour 1
 
-Qu'est-ce qu'une app de photos sans mécanisme d'upload de photo ?
+Commençons par proposer aux utilisateurs d'envoyer une de leurs photos.
 
-### Page d'upload de photo
+### Ajouter une photo
 
-A chaud, je dirais qu'il nous faut:
-- Une page avec un formulaire pour que l'utilisateur sélectionne une image à uploader
-- Un point d'entrée back pour afficher cette page
-- ...
+#### Page d'ajout de photo
 
-✋🙈 STOP! Evitons de produire un backlog, faisons plutôt des petits pas ! 🐣
-
-#### Formulaire d'upload
-Pour créer une nouvelle vue, je n'ai besoin que d'un composant React et de Storybook pour l'essayer.
-
-Je crée un dossier `AddNewPhotoPage` avec deux fichiers `AddNewPhotoPage.tsx` et `AddNewPhotoPage.stories.tsx`.
+Pour créer cette nouvelle page, créons un dossier `AddNewPhotoPage` avec deux fichiers:
+- `AddNewPhotoPage.tsx`: le composant React de la page
+- `AddNewPhotoPage.stories.tsx`: le fichier Storybook pour afficher la page et itérer dessus sans lancer d'application 
 
 Je commence par faire quelques allers-retours avec ChatGPT, que j'essaye avec Storybook.  
 En quelques minutes, j'ai une page visuellement passable ([AddNewPhotoPage.tsx](./src/AddNewPhotoPage/AddNewPhotoPage.tsx)).
