@@ -197,8 +197,8 @@ Servons-nous de typescript !
 Dans un `Fact`, `id` sera toujours un `uuid` généré à la volée et `occurredAt` sera toujours la date actuelle.
 `type` et `details` varieront d'un `Fact` à l'autre.
 
-Rendons donc `Fact` générique puis implémentons une fonction `makeFact` pour gérer les répétitions autour de `id` et `occurredAt`.
-Déclarons aussi `NewPhotoAdded` comme un `Fact` spécifique.
+Rendons donc le type `Fact` générique et implémentons une fonction `makeFact` qui servira pour la déclarations des `Fact spécifiques et gérera les répétitions autour de `id` et `occurredAt`.
+Déclarons aussi `NewPhotoAdded` grace à `Fact` et `makeFact`.
 ```ts
 //
 // src/AddNewPhotoPage/addNewPhoto.route.ts
