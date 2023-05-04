@@ -194,44 +194,12 @@ await addToHistory({
 Je pense que nous pouvons arranger les choses pour avoir un bel appel à `addToHistory`.
 Servons-nous de typescript !
 
-Ce qui est spécifique d'un fait à l'autre est `type` et `details`. `id` et `occurredAt` seront toujours traités de la même façon.
+Dans un `Fact`, `id` sera toujours un `uuid` généré à la volée et `occurredAt` sera toujours la date actuelle.
+`type` et `details` varieront d'un `Fact` à l'autre.
 
-Rendons `Fact` générique puis implémentons une fonction `makeFact` pour gérer les répétitions autour de `id` et `occurredAt`:
-
+Rendons donc `Fact` générique puis implémentons une fonction `makeFact` pour gérer les répétitions autour de `id` et `occurredAt`.
+Déclarons aussi `NewPhotoAdded` comme un `Fact` spécifique.
 ```ts
-//
-// addToHistory.ts
-
-export type Fact<Type extends string = string, Details = any> = {
-  id: string
-  type: Type
-  occurredAt: Date
-  details: Details
-}
-
-
-export const makeFact =
-  <FactType extends Fact>(type: ExtractType<FactType>) =>
-  (details: ExtractDetails<FactType>) => ({
-    id: getUuid(),
-    occurredAt: new Date(),
-    type,
-    details,
-  })
-
-//
-// src/AddNewPhotoPage/NewPhotoAdded.ts
-
-type NewPhotoAdded = Fact<
-  'NewPhotoAdded',
-  {
-    photoId: string
-    addedBy: string
-  }
->
-
-const NewPhotoAdded = makeFact<NewPhotoAdded>('NewPhotoAdded')
-
 //
 // src/AddNewPhotoPage/addNewPhoto.route.ts
 
@@ -243,10 +211,43 @@ await addToHistory(
   })
 )
 
+//
+// src/AddNewPhotoPage/NewPhotoAdded.ts
+
+export type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+  }
+>
+
+export const NewPhotoAdded = makeFact<NewPhotoAdded>('NewPhotoAdded')
+
+//
+// addToHistory.ts
+
+// [...]
+export type Fact<Type extends string = string, Details = any> = {
+  id: string
+  type: Type
+  occurredAt: Date
+  details: Details
+}
+
+export const makeFact =
+  <FactType extends Fact>(type: ExtractType<FactType>) =>
+  (details: ExtractDetails<FactType>) => ({
+    id: getUuid(),
+    occurredAt: new Date(),
+    type,
+    details,
+  })
 ```
 
-Bon, le typescript n'est pas forcément simple mais au moins l'appel à `addToHistory` l'est.
-On peut mettre de coté les types de `addToHistory` et se concentrer sur ses appels.
+Les types génériques de `Fact` et `makeFact` demandent une certaine maitrise de typescript mais ne sont voués à être changé.
+Ils permettent d'avoir une déclaration relativement simple de `NewPhotoAdded`.
+Enfin, les appels à `addToHistory` sont rendus plus aisée grace à l'assistance de typescript dans l'IDE.
 
 Une dernière chose: les `details` d'un `Fact` doivent pouvoir être insérés dans une colonne de type `jsonb`. Cela veut dire que les `details` doivent être serialisables.
 Ajoutons donc une petite contrainte typescript sur le type `Details`, comme ceci:
@@ -257,7 +258,7 @@ Ajoutons donc une petite contrainte typescript sur le type `Details`, comme ceci
 type Literal = boolean | null | number | string
 type JSON = Literal | { [key: string]: JSON } | JSON[]
 
-type Fact<Type extends string = string, Details extends JSON = any> = {
+type Fact<Type extends string = string, Details extends JSON = {}> = {
   id: string
   type: Type
   occurredAt: Date
