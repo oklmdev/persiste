@@ -94,7 +94,7 @@ Pour gérer cette logique, nous créons le fichier [src/pages/AddNewPhoto/addNew
 >
 > En effet, pour commencer au plus simple, nous n'avons pas opté pour une SPA. Il n'y même pas encore de javascript executé coté front.  
 > 
-> Toute la logique est gérée coté nodejs. La navigation entre les pages se fait avec du HTML (liens, formulaires, etc.).  
+> Toute la logique et le rendering sont gérés coté nodejs. La navigation entre les pages se fait avec du HTML (liens, formulaires, etc.).  
 >
 > Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris.
 
