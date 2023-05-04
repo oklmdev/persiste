@@ -153,6 +153,13 @@ Implémentation au plus simple:
 //
 // src/utils/addToHistory.ts
 
+type Fact = {
+  id: string
+  type: string
+  occurredAt: Date
+  details: any
+}
+
 // To be called to persist each new Fact
 export const addToHistory = async ({ id, type, details, occurredAt }: Fact) => {
   await postgres.query('INSERT INTO history (id, type, details, occurredAt) VALUES ($1, $2, $3, $4)', [
@@ -161,14 +168,6 @@ export const addToHistory = async ({ id, type, details, occurredAt }: Fact) => {
     details,
     occurredAt,
   ])
-}
-
-
-type Fact = {
-  id: string
-  type: string
-  occurredAt: Date
-  details: any
 }
 
 // To be called once, at application launch (see server.ts)
