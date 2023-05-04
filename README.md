@@ -77,35 +77,30 @@ Commençons par proposer aux utilisateurs d'envoyer une de leurs photos.
 
 #### Page d'ajout de photo
 
-Pour créer cette nouvelle page, créons un dossier `AddNewPhotoPage` avec deux fichiers:
+Pour créer cette nouvelle page, créons un dossier `src/pages/AddNewPhotoPage` avec deux fichiers:
 - `AddNewPhotoPage.tsx`: le composant React de la page
-- `AddNewPhotoPage.stories.tsx`: le fichier Storybook pour afficher la page et itérer dessus sans lancer d'application 
+- `AddNewPhotoPage.stories.tsx`: le fichier Storybook, pour afficher la page et itérer dessus sans lancer d'application 
 
-Je commence par faire quelques allers-retours avec ChatGPT, que j'essaye avec Storybook.  
-En quelques minutes, j'ai une page visuellement passable ([AddNewPhotoPage.tsx](./src/AddNewPhotoPage/AddNewPhotoPage.tsx)).
-
-> Remarquez que j'ai choisi d'utiliser des termes métier ("Add new photo") plutot que des termes techniques ("Formulaire d'upload d'image").
+> Remarquez que nous avons choisi d'utiliser des termes produit ("Add new photo") plutot que des termes techniques ("Formulaire d'upload d'image").
 > 
 > C'est subtil mais ça sera plus facile en discussion d'équipe.
 
-On arrive ici : [7f79336d967a532d7f830b31dd393375704026db](7f79336d967a532d7f830b31dd393375704026db).
+Nous arrivons ici : [TODO: mettre le lien vers le commit correspondant].
 
 Cette page n'est pas encore accessible aux utilisateurs. Il faut lui donner une route et rajouter un lien sur la page d'accueil.  
-Cette logique est gérée le fichier [addNewPhoto.route.ts](./src/AddNewPhotoPage/addNewPhoto.route.ts).
+Pour gérer cette logique, nous créons le fichier [src/pages/AddNewPhoto/addNewPhoto.route.ts](./src/AddNewPhotoPage/addNewPhoto.route.ts).
 
-> Notre route ne retourne que du HTML tout simple (via le petit utilitaire local [responseAsHtml](./src/utils/responseAsHtml.ts), que je vous invite à lire).  
+> Notre route retourne du HTML grace petit à l'utilitaire local [responseAsHtml](./src/utils/responseAsHtml.ts), qui utilise `ReactDOMServer.renderToString`.  
 >
-> En effet, ce n'est pas une SPA, il n'y même pas encore de javascript executé coté front.  
+> En effet, pour commencer au plus simple, nous n'avons pas opté pour une SPA. Il n'y même pas encore de javascript executé coté front.  
 > 
-> Pour rester au plus simple, toute la logique est gérée coté back. Le reste est géré avec des simples liens, des formulaires, etc.  
+> Toute la logique est gérée coté nodejs. La navigation entre les pages se fait avec du HTML (liens, formulaires, etc.).  
 >
-> Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris 😆.
-> 
-> Mais ceci n'est pas le sujet !
+> Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris.
 
 #### Sauvegarde de la photo
 
-Branchons maintenant sur un système de persistence de fichiers. Je prends ce que j'ai sous la main, qui permet d'uploader en local ou sur S3.
+Branchons maintenant sur un système de persistence de fichiers. Nous pouvons nous *inspirer* de ce que nous avons déjà codé, et qui permet d'uploader en local ou sur S3.
 
 #### Enfin, le sujet de la persistence !
 
