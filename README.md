@@ -7,17 +7,18 @@ Comment démarrer un projet sans passer par la case modélisation de données ?
 ### Contexte
   
   
-- Je démarre un **nouveau projet**.
-- Mon client peut parler des heures de son projet mais en réalité a une **idée très vague** du produit.
-- Il a déjà des utilisateurs pour tester et **il veut leur montrer un truc aujourd'hui** (l'idéal aurait été hier mais bon...).
+- Nous démarrons un **nouveau projet**.
+- Le client a une idée **très précise** du produit idéal, mais une idée **très vague** de comment y parvenir
+  - Nous avons réussi à le convaincre d'adopter une approche itérative, où nous intégrons rapidement des retours utilisateurs.
+- Il a d'ailleurs déjà des utilisateurs pour tester et **il veut leur montrer un truc aujourd'hui** (l'idéal aurait été hier mais bon...).
   - Ce seront des *testeurs* mais **pas question de perdre leurs données** durant cette phase.
 - Nous sommes **une petite équipe** moitié projet/marketing, moitié tech.
 
-Vous l'aurez compris, il va falloir être efficaces et travailler en cycles courts, avec un seul objectif en tête : **tester les hypothèses produit en production**.
+Vous l'aurez compris, il va falloir être efficaces et travailler en cycles courts, avec un seul objectif en tête : **tester les hypothèses produit en production**, idéalement chaque jour. 
 
-Côté projet, l'enjeu sera une **communication fluide dans l'équipe**. Pas le temps pour les traductions, les membres de l'équipe parleront le même jargon.
+Côté projet, l'enjeu sera une **communication fluide dans l'équipe**, sans séparer les techs du reste de l'équipe.
 
-Côté technique, l'enjeu sera de ne pas perdre de temps à construire des cathédrales. Chaque fonctionnalité déployée un jour, devra pouvoir être retirée (ou amendée) le lendemain. Cela demande une **archi optimisée pour le changement**.
+Côté technique, l'enjeu sera d'aller à l'essentiel. Chaque fonctionnalité déployée en prod, devra pouvoir être retirée (ou amendée) sans planification. Cela demande une **archi conçue pour le changement**.
 
 Ce qui nous amène à notre premier défi...
 
