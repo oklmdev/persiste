@@ -243,14 +243,20 @@ export const makeFact =
     type,
     details,
   })
+  
+// Some type utils
+type ExtractType<FactType extends Fact> = FactType extends Fact<infer Type, any> ? Type : never
+
+type ExtractDetails<FactType extends Fact> = FactType extends Fact<string, infer Details> ? Details : never
+
 ```
 
-Les types génériques de `Fact` et `makeFact` demandent une certaine maitrise de typescript mais ne sont voués à être changé.
-Ils permettent d'avoir une déclaration relativement simple de `NewPhotoAdded`.
-Enfin, les appels à `addToHistory` sont rendus plus aisée grace à l'assistance de typescript dans l'IDE.
+Les types génériques de `Fact` et `makeFact` demandent une certaine maitrise de typescript mais ne sont voués à être changés.
+Ils permettent d'avoir une déclaration plus simple de `NewPhotoAdded`.
+Enfin, les appels à `addToHistory` sont rendus plus concis et nous profitons de l'assistance de typescript dans l'IDE.
 
 Une dernière chose: les `details` d'un `Fact` doivent pouvoir être insérés dans une colonne de type `jsonb`. Cela veut dire que les `details` doivent être serialisables.
-Ajoutons donc une petite contrainte typescript sur le type `Details`, comme ceci:
+Ajoutons donc une contrainte typescript sur le type `Details`, comme ceci:
 
 ```ts
 //
@@ -274,7 +280,7 @@ type NewPhotoAdded = Fact<
   {
     photoId: string
     addedBy: string
-    takenOn: Date // 🚨 Date is not serializable
+    addedOn: Date // 🚨 Date is not serializable
   }
 >
 
@@ -284,7 +290,7 @@ type NewPhotoAdded = Fact<
   {
     photoId: string
     addedBy: string
-    takenOn: number // 👌 number is serializable
+    addedOn: number // 👌 number is serializable
   }
 >
 ```
