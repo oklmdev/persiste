@@ -57,8 +57,8 @@ Utilisons des technos maitrisées par l'équipe.
 
 - Typescript
 - Node/Express
-- React/Tailwind
-- Jest/Storybook
+- React/[Tailwind](https://tailwindcss.com)
+- Jest/[Storybook](https://storybook.js.org)
 - Postgresql
 - Déployé en continu sur un PaaS (Scalingo)
 
@@ -79,14 +79,17 @@ Commençons par proposer aux utilisateurs d'envoyer une de leurs photos.
 
 Pour créer cette nouvelle page, créons un dossier `src/pages/AddNewPhotoPage` avec deux fichiers:
 - `AddNewPhotoPage.tsx`: le composant React de la page
-- `AddNewPhotoPage.stories.tsx`: le fichier Storybook, pour afficher la page et itérer dessus sans lancer d'application 
+- `AddNewPhotoPage.stories.tsx`: le fichier Storybook, pour afficher la page et itérer dessus sans lancer d'application
+- `addNewPhoto.route.ts`: déclare la route express pour afficher cette page ([TODO: plus d'explications ici]) 
 
-> Remarquez que nous avons choisi d'utiliser des termes produit ("Add new photo") plutot que des termes techniques ("Formulaire d'upload d'image").
+> Remarquez que nous avons choisi d'utiliser des termes produit ("Add new photo") plutot que des termes techniques ("Image upload form").
 > 
 > C'est subtil mais ça sera plus facile en discussion d'équipe.
 
 Nous arrivons ici : [TODO: mettre le lien vers le commit correspondant].
+[TODO: rajouter des captures de l'écran + du storybook]
 
+TODO: déplacer dans un fichier.md à part
 Cette page n'est pas encore accessible aux utilisateurs. Il faut lui donner une route et rajouter un lien sur la page d'accueil.  
 Pour gérer cette logique, nous créons le fichier [src/pages/AddNewPhoto/addNewPhoto.route.ts](./src/AddNewPhotoPage/addNewPhoto.route.ts).
 
@@ -100,7 +103,7 @@ Pour gérer cette logique, nous créons le fichier [src/pages/AddNewPhoto/addNew
 
 #### Sauvegarde de la photo
 
-Branchons maintenant sur un système de persistence de fichiers. Nous pouvons nous *inspirer* de ce que nous avons déjà codé, et qui permet d'uploader en local ou sur S3.
+Branchons maintenant sur un système de persistence de fichiers. Pour le stockage du fichier image lui-même, nous réutilisons un code générique issus de précédents projets (par ici si ça vous intéresse: [photoStorage](./src/utils/photoStorage.ts)).
 
 #### Enfin, le sujet de la persistence !
 
