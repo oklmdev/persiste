@@ -1,5 +1,5 @@
 import express from 'express'
-import z from 'zod'
+import { z } from 'zod'
 
 import { ANewPhotoHasBeenAddedByAUser } from '../AddNewPhotoPage/ANewPhotoHasBeenAddedByAUser'
 import { requireAuth } from '../auth/requireAuth'
