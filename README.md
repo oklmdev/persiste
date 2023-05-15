@@ -194,6 +194,7 @@ await addToHistory({
 
 Nous pouvons arranger les choses pour avoir un plus bel appel à `addToHistory`.
 Servons-nous de typescript !
+Si vous n'êtes pas à l'aise avec le typescript, vous pouvez directement à la section suivante ([TODO: mettre lien vers la section suivante])
 
 Dans un `Fact`, `id` sera un `uuid` généré à la volée et `occurredAt` sera la date actuelle.
 Seuls `type` et `details` varieront d'un `Fact` à l'autre.
@@ -210,6 +211,7 @@ await addToHistory(
   NewPhotoAdded({
     photoId,
     addedBy: request.session.user.id,
+    file: request.file.filename
   })
 )
 
@@ -221,6 +223,7 @@ export type NewPhotoAdded = Fact<
   {
     photoId: string
     addedBy: string
+    file: string
   }
 >
 
@@ -253,7 +256,7 @@ type ExtractDetails<FactType extends Fact> = FactType extends Fact<string, infer
 
 ```
 
-Les types génériques de `Fact` et `makeFact` demandent une certaine maitrise de typescript mais ne sont voués à être changés.
+Les types génériques de `Fact` et `declareFact` demandent une certaine maitrise de typescript mais ne sont voués à être changés.
 Ils permettent d'avoir une déclaration plus simple de `NewPhotoAdded`.
 Enfin, les appels à `addToHistory` sont rendus plus concis et nous profitons de l'assistance de typescript dans l'IDE.
 
