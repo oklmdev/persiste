@@ -218,6 +218,7 @@ await addToHistory(
 //
 // src/AddNewPhotoPage/NewPhotoAdded.ts
 
+// 1) Nous déclarons le type
 export type NewPhotoAdded = Fact<
   'NewPhotoAdded',
   {
@@ -225,9 +226,12 @@ export type NewPhotoAdded = Fact<
     addedBy: string
     file: string
   }
->
 
+// 2) Nous déclarons la fonction qui va jouer le role de "constructeur"
 export const NewPhotoAdded = declareFact<NewPhotoAdded>('NewPhotoAdded')
+
+// NewPhotoAdded(details) produit un simple objet (qui respecte le type NewPhotoAdded)
+// en non une instance de classe
 
 //
 // addToHistory.ts
