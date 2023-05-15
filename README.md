@@ -182,8 +182,8 @@ export const createHistoryTable = async () => {
 const photoId = getUuid()
 await addToHistory({
   id: getUuid(),
-  type: 'NewPhotoAdded',
   occurredAt: new Date(),
+  type: 'NewPhotoAdded',
   details: {
     photoId,
     addedBy: request.session.user.id,
@@ -195,11 +195,12 @@ await addToHistory({
 Nous pouvons arranger les choses pour avoir un plus bel appel à `addToHistory`.
 Servons-nous de typescript !
 
-Dans un `Fact`, `id` sera toujours un `uuid` généré à la volée et `occurredAt` sera toujours la date actuelle.
-`type` et `details` varieront d'un `Fact` à l'autre.
+Dans un `Fact`, `id` sera un `uuid` généré à la volée et `occurredAt` sera la date actuelle.
+Seuls `type` et `details` varieront d'un `Fact` à l'autre.
 
-Rendons donc le type `Fact` générique et implémentons une fonction `makeFact` qui servira pour la déclarations des `Fact spécifiques et gérera les répétitions autour de `id` et `occurredAt`.
-Déclarons aussi `NewPhotoAdded` grace à `Fact` et `makeFact`.
+Rendons donc le type `Fact<Type, Details>` générique et implémentons une fonction `declareFact()` qui gérera les répétitions autour de `id` et `occurredAt`.
+
+Déclarons aussi `NewPhotoAdded` grace à `Fact` et `declareFact`.
 ```ts
 //
 // src/AddNewPhotoPage/addNewPhoto.route.ts
@@ -223,7 +224,7 @@ export type NewPhotoAdded = Fact<
   }
 >
 
-export const NewPhotoAdded = makeFact<NewPhotoAdded>('NewPhotoAdded')
+export const NewPhotoAdded = declareFact<NewPhotoAdded>('NewPhotoAdded')
 
 //
 // addToHistory.ts
@@ -236,7 +237,7 @@ export type Fact<Type extends string = string, Details = any> = {
   details: Details
 }
 
-export const makeFact =
+export const declareFact =
   <FactType extends Fact>(type: ExtractType<FactType>) =>
   (details: ExtractDetails<FactType>) => ({
     id: getUuid(),
