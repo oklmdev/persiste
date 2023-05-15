@@ -139,7 +139,7 @@ Le **fait** sera décrit par:
 - une date d'occurence (`occurredAt`)
 - des `details` qui seront spécifiques au fait
   - stockés sous forme de JSON
-  - ex: pour `NewPhotoAdded` `{ addedBy: 'user_1234', file: 'DSC_0001.jpg', ... }`
+  - ex: pour `NewPhotoAdded` `{ photoId: 'photo_1234', addedBy: 'user_1234', file: 'DSC_0001.jpg' }`
 
 Cette table unique aura donc un format simple. 
 On pourra faire des appels tout aussi simples:
@@ -187,10 +187,12 @@ await addToHistory({
   details: {
     photoId,
     addedBy: request.session.user.id,
+    file: request.file.filename
   }
 })
 ```
-Je pense que nous pouvons arranger les choses pour avoir un bel appel à `addToHistory`.
+
+Nous pouvons arranger les choses pour avoir un plus bel appel à `addToHistory`.
 Servons-nous de typescript !
 
 Dans un `Fact`, `id` sera toujours un `uuid` généré à la volée et `occurredAt` sera toujours la date actuelle.
