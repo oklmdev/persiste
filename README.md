@@ -101,51 +101,47 @@ Pour gérer cette logique, nous créons le fichier [src/pages/AddNewPhoto/addNew
 >
 > Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris.
 
-#### Sauvegarde de la photo
+#### Sauvegarde du fichier de la photo
 
-Branchons maintenant sur un système de persistence de fichiers. Pour le stockage du fichier image lui-même, nous réutilisons un code générique issus de précédents projets (par ici si ça vous intéresse: [photoStorage](./src/utils/photoStorage.ts)).
+Pour le stockage du fichier image lui-même, nous réutilisons un code générique issus de précédents projets (par ici si ça vous intéresse: [photoStorage](./src/utils/photoStorage.ts)).
 
-#### Enfin, le sujet de la persistence !
+#### Persistence de l'ajout de la photo par l'utilisateur
 
-Nous arrivons au besoin de persister l'information autour de la photo qui vient d'être uploadée (quand, qui, quoi...) et c'était notre objectif de départ, à savoir "*est-ce que nous pouvons nous passer de modélisation de schéma de données ?*".
-
-Nous cherchons à rendre compatible les choses suivantes:
-- **Ne pas perdre d'information**
-  - Nous n'avons qu'une seule occasion d'écrire les informations dans leur intégralité, lors de l'execution d'une action.
-- **Ne pas polluer notre conception de persistence** avec des suppositions sur l'utilisation future de ces informations
-  - Les sujets de lecture et d'écriture sont souvent mélangées lorsque notre concevons notre db.
-  - **Si nous avons tout enregistré, nous pourrons toujours changer les requêtes en lecture**, impossible donc de faire une grosse erreur.
-
-La difficulté et l'enjeu de notre exercice est donc de penser à la persistence sans perte d'information, tout en mettant totalement de coté la manière dont nous allons nous en servir.
+Nous arrivons au besoin de persister l'information autour de la photo qui vient d'être ajoutée (quand, qui, quoi...) et c'était notre objectif de départ, à savoir "*est-ce que nous pouvons nous passer de modélisation de schéma de données ?*".
 
 A ce stade, nous serions sans doute partis sur une table `photos` avec des colonnes pour retenir:
+- Un identifiant (`photoId`)
 - Qui a uploadé cette photo (`userId`)
 - Quand (`Date.now()`)
-- Un identifiant (`photoId`)
+- Où la photo est stockée
 
-Et qu'on se pose des questions comme :
-- Est-ce qu'on utilise une clé étrangère pour lier la photo avec l'utilisateur ?
+Et nous pourrions nous poser des questions comme :
+- Est-ce que nous utilisons une clé étrangère pour lier la photo avec l'utilisateur ?
 
-Mais en faisant ça, on triche déjà en créant une entité `photo`.
+Mais en faisant ça, nous trichons déjà en créant une entité `photo` et peut-être même en faisant de l'optimisation prématurée.
 
-Non, tout ce qu'on sait, c'est ***qu'un utilisateur a ajouté une nouvelle photo***. C'est un **fait**.
+Nous ne savons pas encore comment ces informations seront utilisées donc persistons tout. **Si avons enregistré tous les faits, nous pourrons toujours décider de comment consulter la donnée plus tard**. 
 
-#### Conception de la persistence à base de faits
+Tout ce que nous savons à ce stade, c'est ***qu'un utilisateur a ajouté une nouvelle photo***. C'est un **fait**.
 
-Je nous propose de ne persister que des **faits** (ou `fact`) dans une table `history`.
+#### Concevons une persistence à base de faits
 
-L'état à date de notre application sera représenté par son historique, c'est à dire l'ensemble des faits.  
-Le **fait** sera la seule primitive de persistence de notre application. Quand il se passe quelque chose, un fait sera ajouté à l'historique, l'équivalent d'un (ou plusieurs) `INSERT INTO photos VALUES...`.
+Persistons seulement les **faits** (ou `fact`) dans une table `history`.
+
+A chaque nouveau fait, insérons-le dans cette table. Cela correspond à un (ou plusieurs) `INSERT INTO history VALUES...`.
+Le **fait** sera la seule primitive de persistence de notre application.
+
+**L'état à date de notre application sera la somme des faits contenus dans son historique.** 
 
 Le **fait** sera décrit par:
 - un `type`, simple `string` qui décrira le type de fait qui s'est déroulé
   - ex: *un utilisateur a ajouté une nouvelle photo* ou `'NewPhotoAdded'` en réponse à la page `AddNewPhoto.tsx`.
-- une date d'occurence (`occurredAt` ? `happenedOn`? ...)
-- des `details` qui seront spécifiques au fait 
-  - ex: `addedBy` pour `NewPhotoAdded`
-  - un `jsonb` de postgres sera idéal
+- une date d'occurence (`occurredAt`)
+- des `details` qui seront spécifiques au fait
+  - stockés sous forme de JSON
+  - ex: pour `NewPhotoAdded` `{ addedBy: 'user_1234', file: 'DSC_0001.jpg', ... }`
 
-Cette table unique aura donc une format simple. 
+Cette table unique aura donc un format simple. 
 On pourra faire des appels tout aussi simples:
 - Persister un fait: `INSERT INTO history VALUES...`.
 - Récupérer des faits: `SELECT * FROM history WHERE type='...';`
