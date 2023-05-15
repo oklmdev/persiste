@@ -305,7 +305,7 @@ type NewPhotoAdded = Fact<
 Nous avons
 - un formulaire html pour uploader une photo,
 - de quoi stocker la photo,
-- et de quoi persister ce qui s'est passé.
+- et de quoi persister ce qu'il s'est passé.
 
 Pour la persistence, nous avons utilisé une stratégie alternative: nous sauvegardons des faits dans une seule table historique. Chaque *fait* demande une conception, n'avons nous pas échangé une modélisation de données pour une autre ?
 
