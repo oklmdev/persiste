@@ -1,8 +1,6 @@
 # Persistence OKLM
 Comment démarrer un projet sans passer par la case modélisation de données ?
 
-<details>
-  <summary>Afficher le contexte du projet</summary>
 
 ### Contexte
   
@@ -63,11 +61,6 @@ Utilisons des technos maitrisées par l'équipe.
 - Déployé en continu sur un PaaS (Scalingo)
 
 ### Attaquons !
-
-> Je crée une branche pour suivre l'avancée chaque jour.  
->
-> Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
-</details>
 
 ## Jour 1
 
