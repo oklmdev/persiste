@@ -1,19 +1,24 @@
 # Persistence OKLM
 Comment démarrer un projet sans passer par la case modélisation de données ?
 
-### Contexte
+<details>
+  <summary>Afficher le contexte du projet</summary>
 
-- Je démarre un **nouveau projet**.
-- Mon client peut parler des heures de son projet mais en réalité a une **idée très vague** du produit.
-- Il a déjà des utilisateurs pour tester et **il veut leur montrer un truc aujourd'hui** (l'idéal aurait été hier mais bon...).
+### Contexte
+  
+  
+- Nous démarrons un **nouveau projet**.
+- Le client a une idée **très précise** du produit idéal, mais une idée **très vague** de comment y parvenir
+  - Nous avons réussi à le convaincre d'adopter une approche itérative, où nous intégrons rapidement des retours utilisateurs.
+- Il a d'ailleurs déjà des utilisateurs pour tester et **il veut leur montrer un truc aujourd'hui** (l'idéal aurait été hier mais bon...).
   - Ce seront des *testeurs* mais **pas question de perdre leurs données** durant cette phase.
 - Nous sommes **une petite équipe** moitié projet/marketing, moitié tech.
 
-Vous l'aurez compris, il va falloir être efficaces et travailler en cycles courts, avec un seul objectif en tête : **tester les hypothèses produit en production**.
+Vous l'aurez compris, il va falloir être efficaces et travailler en cycles courts, avec un seul objectif en tête : **tester les hypothèses produit en production**, idéalement chaque jour. 
 
-Côté projet, l'enjeu sera une **communication fluide dans l'équipe**. Pas le temps pour les traductions, les membres de l'équipe parleront le même jargon.
+Côté projet, l'enjeu sera une **communication fluide dans l'équipe**, sans séparer les techs du reste de l'équipe.
 
-Côté technique, l'enjeu sera de ne pas perdre de temps à construire des cathédrales. Chaque fonctionnalité déployée un jour, devra pouvoir être retirée (ou amendée) le lendemain. Cela demande une **archi optimisée pour le changement**.
+Côté technique, l'enjeu sera d'aller à l'essentiel. Chaque fonctionnalité déployée en prod, devra pouvoir être retirée (ou amendée) sans planification. Cela demande une **archi conçue pour le changement**.
 
 Ce qui nous amène à notre premier défi...
 
@@ -21,62 +26,497 @@ Ce qui nous amène à notre premier défi...
 
 Dans mon expérience, **les équipes perdent du temps lors de la modélisation des données**. Nous nous mettons, par exemple, d'accord sur des schéma de tables en nous basant sur des suppositions d'usage futur.
 
-Et comme il y a enormément d'**incertitudes**, et qu'on a des données en prod, il est nécessaire de faire des scripts de migrations à chaque changement. **Nous payons double chaque changement !**
+Et comme il y a enormément d'**incertitudes**, et qu'on a des données en prod, il est nécessaire de faire des scripts de migrations à chaque changement. Nous devons faire **un double effort** pour chaque changement (sur la structure et sur les données).
 
-Intuitivement, ce phénomène désagréable nous incite à éviter les refontes coté code, adapter le code existant pour un nouvel usage, et **la dette technique s'installe**...
+Ces efforts, à la longue, risquent de nous dissuader de faire ces changements, ou du moins, de les faire convenablement, pour garder notre *"vélocité"*. **La dette technique s'installe**...
 
 Mais comment faire autrement ?
 
 ### Vers une autre solution
 
-Prenons le temps de ce moment pour imaginer une solution alternative. Nous ne sommes pas (encore) dans le stress et n'avons pas (encore) le nez dans le guidon.
-
-Ce ne sera qu'un exercice de l'imagination, OKLM.
-
 #### Le contrat
 
-Voici les objectifs de la solution à trouver:
+Voici un résumé des contraintes:
 
-- **Pas de réunion de modélisation de données**
-  - Je dois pouvoir inclure toute l'équipe et tout le monde ne connait pas le SQL, l'UML, les entités, ... On reste dans les termes métier !
-- **Pas de script de migration**
-- **Pas de perte de données**
-
-Infaisable ? Allez, je précise quelque chose qui rendra peut-être la tâche plus accessible:
-
-- **Pas d'objectif en terme de perfs**
-   - Il est toujours trop tôt mais jamais trop tard pour optimiser.
+- Nous incluerons toute l'équipe et comme tout le monde ne connait pas le SQL, l'UML, les entités, nous restons dans le vocabulaire du produit
+  - donc **pas de réunion de modélisation de données**
+- Un changement dans le code ne doit pas répresenter une source de friction pour préserver les données
+  - donc **pas de script de migration**
+- Il est toujours trop tôt mais jamais trop tard pour optimiser
+  - donc **pas d'optimisation des performances** avant d'avoir mesuré un impact
+- Nous ne voulons pas de perte de données
+  - donc **pas de perte de données**
 
 #### Quelques mots sur le produit
 
-Alors, je me suis un peu perdu dans les explications du client, et les autres membres de l'équipe aussi...
-
-Il est parti un peu vite de la réunion (un avion à prendre ?) et n'est pas joignable pour répondre à nos questions avant demain.
-
-Cela dit, il nous a promis de nous consacrer 5 min chaque jour pour nous faire des retours. Pour le reste, il faudra voir avec les utilisateurs.
-
-Une chose est sure c'est **une application web de photos**. Donc on peut partir sur ça et construire au fur et à mesure.
-
-Je vous avais prévenus qu'il faudrait travailler dans l'incertitude. Mais c'est le cas plus ou moins de tous les projets, non ?
-
+Le client souhaite une application web où les utilisateurs pourront s'échanger des photos.
 
 #### Et la stack technique
 
-Je ne veux pas prendre de risque, je n'utilise que des technos que je maitrise bien. Peu importe les perfs.  
-
-Pas de framework "magique" qui prend la main sur tout et introduit des incompatibilités.
+Utilisons des technos maitrisées par l'équipe.
 
 - Typescript
 - Node/Express
-- React/Tailwind
-- Jest/Storybook
+- React/[Tailwind](https://tailwindcss.com)
+- Jest/[Storybook](https://storybook.js.org)
 - Postgresql
 - Déployé en continu sur un PaaS (Scalingo)
 
-Mais honnêtement, nous allons rester dans des choses très simples donc il est possible de suivre sans connaitre ces technos.
-
 ### Attaquons !
 
-Je crée une branche pour suivre l'avancée chaque jour.  
+> Je crée une branche pour suivre l'avancée chaque jour.  
+>
+> Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
+</details>
 
-Vous trouverez [la branche du premier jour ici](https://github.com/oklmdev/persiste/tree/day1/uploadPhoto).
+## Jour 1
+
+Commençons par proposer aux utilisateurs d'envoyer une de leurs photos.
+
+### Ajouter une photo
+
+#### Page d'ajout de photo
+
+Pour créer cette nouvelle page, créons un dossier `src/pages/AddNewPhotoPage` avec deux fichiers:
+- `AddNewPhotoPage.tsx`: le composant React de la page
+- `AddNewPhotoPage.stories.tsx`: le fichier Storybook, pour afficher la page et itérer dessus sans lancer d'application
+- `addNewPhoto.route.ts`: déclare la route express pour afficher cette page ([TODO: plus d'explications ici]) 
+
+> Remarquez que nous avons choisi d'utiliser des termes produit ("Add new photo") plutot que des termes techniques ("Image upload form").
+> 
+> C'est subtil mais ça sera plus facile en discussion d'équipe.
+
+Nous arrivons ici : [TODO: mettre le lien vers le commit correspondant].
+[TODO: rajouter des captures de l'écran + du storybook]
+
+TODO: déplacer dans un fichier.md à part
+Cette page n'est pas encore accessible aux utilisateurs. Il faut lui donner une route et rajouter un lien sur la page d'accueil.  
+Pour gérer cette logique, nous créons le fichier [src/pages/AddNewPhoto/addNewPhoto.route.ts](./src/AddNewPhotoPage/addNewPhoto.route.ts).
+
+> Notre route retourne du HTML grace petit à l'utilitaire local [responseAsHtml](./src/utils/responseAsHtml.ts), qui utilise `ReactDOMServer.renderToString`.  
+>
+> En effet, pour commencer au plus simple, nous n'avons pas opté pour une SPA. Il n'y même pas encore de javascript executé coté front.  
+> 
+> Toute la logique et le rendering sont gérés coté nodejs. La navigation entre les pages se fait avec du HTML (liens, formulaires, etc.).  
+>
+> Ce n'est pas courant sur les projets React donc ne soyez pas surpris d'être surpris.
+
+#### Sauvegarde du fichier de la photo
+
+Pour le stockage du fichier image lui-même, nous réutilisons un code générique issus de précédents projets (par ici si ça vous intéresse: [photoStorage](./src/utils/photoStorage.ts)).
+
+#### Persistence de l'ajout de la photo par l'utilisateur
+
+Nous arrivons au besoin de persister l'information autour de la photo qui vient d'être ajoutée (quand, qui, quoi...) et c'était notre objectif de départ, à savoir "*est-ce que nous pouvons nous passer de modélisation de schéma de données ?*".
+
+A ce stade, nous serions sans doute partis sur une table `photos` avec des colonnes pour retenir:
+- Un identifiant (`photoId`)
+- Qui a uploadé cette photo (`userId`)
+- Quand (`Date.now()`)
+- Où la photo est stockée
+
+Et nous pourrions nous poser des questions comme :
+- Est-ce que nous utilisons une clé étrangère pour lier la photo avec l'utilisateur ?
+
+Mais en faisant ça, nous trichons déjà en créant une entité `photo` et peut-être même en faisant de l'optimisation prématurée.
+
+Nous ne savons pas encore comment ces informations seront utilisées donc persistons tout. **Si avons enregistré tous les faits, nous pourrons toujours décider de comment consulter la donnée plus tard**. 
+
+Tout ce que nous savons à ce stade, c'est ***qu'un utilisateur a ajouté une nouvelle photo***. C'est un **fait**.
+
+#### Concevons une persistence à base de faits
+
+Persistons seulement les **faits** (ou `fact`) dans une table `history`.
+
+A chaque nouveau fait, insérons-le dans cette table. Cela correspond à un (ou plusieurs) `INSERT INTO history VALUES...`.
+Le **fait** sera la seule primitive de persistence de notre application.
+
+**L'état à date de notre application sera la somme des faits contenus dans son historique.** 
+
+Le **fait** sera décrit par:
+- un `type`, simple `string` qui décrira le type de fait qui s'est déroulé
+  - ex: *un utilisateur a ajouté une nouvelle photo* ou `'NewPhotoAdded'` en réponse à la page `AddNewPhoto.tsx`.
+- une date d'occurence (`occurredAt`)
+- des `details` qui seront spécifiques au fait
+  - stockés sous forme de JSON
+  - ex: pour `NewPhotoAdded` `{ photoId: 'photo_1234', addedBy: 'user_1234', file: 'DSC_0001.jpg' }`
+
+Cette table unique aura donc un format simple. 
+On pourra faire des appels tout aussi simples:
+- Persister un fait: `INSERT INTO history VALUES...`.
+- Récupérer des faits: `SELECT * FROM history WHERE type='...';`
+
+Implémentation au plus simple:
+
+```ts
+//
+// src/utils/addToHistory.ts
+
+type Fact = {
+  id: string
+  type: string
+  occurredAt: Date
+  details: any
+}
+
+// To be called to persist each new Fact
+export const addToHistory = async ({ id, type, details, occurredAt }: Fact) => {
+  await postgres.query('INSERT INTO history (id, type, details, occurredAt) VALUES ($1, $2, $3, $4)', [
+    id,
+    type,
+    details,
+    occurredAt,
+  ])
+}
+
+// To be called once, at application launch (see server.ts)
+export const createHistoryTable = async () => {
+  return postgres.query(
+    `CREATE TABLE IF NOT EXISTS history (id UUID PRIMARY KEY, type VARCHAR(255) NOT NULL, details JSONB, "occurredAt" TIMESTAMPTZ NOT NULL);`
+  )
+}
+
+//
+// src/AddNewPhotoPage/addNewPhoto.route.ts
+
+const photoId = getUuid()
+await addToHistory({
+  id: getUuid(),
+  occurredAt: new Date(),
+  type: 'NewPhotoAdded',
+  details: {
+    photoId,
+    addedBy: request.session.user.id,
+    file: request.file.filename
+  }
+})
+```
+
+Nous pouvons arranger les choses pour avoir un plus bel appel à `addToHistory`.
+Servons-nous de typescript !
+Si vous n'êtes pas à l'aise avec le typescript, vous pouvez directement à la section suivante ([TODO: mettre lien vers la section suivante])
+
+Dans un `Fact`, `id` sera un `uuid` généré à la volée et `occurredAt` sera la date actuelle.
+Seuls `type` et `details` varieront d'un `Fact` à l'autre.
+
+Rendons donc le type `Fact<Type, Details>` générique et implémentons une fonction `declareFact()` qui gérera les répétitions autour de `id` et `occurredAt`.
+
+Déclarons aussi `NewPhotoAdded` grace à `Fact` et `declareFact`.
+```ts
+//
+// src/AddNewPhotoPage/addNewPhoto.route.ts
+
+const photoId = getUuid()
+await addToHistory(
+  NewPhotoAdded({
+    photoId,
+    addedBy: request.session.user.id,
+    file: request.file.filename
+  })
+)
+
+//
+// src/AddNewPhotoPage/NewPhotoAdded.ts
+
+// 1) Nous déclarons le type
+export type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+    file: string
+  }
+
+// 2) Nous déclarons la fonction qui va jouer le role de "constructeur"
+export const NewPhotoAdded = declareFact<NewPhotoAdded>('NewPhotoAdded')
+
+// NewPhotoAdded(details) produit un simple objet (qui respecte le type NewPhotoAdded)
+// en non une instance de classe
+
+//
+// addToHistory.ts
+
+// [...]
+export type Fact<Type extends string = string, Details = any> = {
+  id: string
+  type: Type
+  occurredAt: Date
+  details: Details
+}
+
+export const declareFact =
+  <FactType extends Fact>(type: ExtractType<FactType>) =>
+  (details: ExtractDetails<FactType>) => ({
+    id: getUuid(),
+    occurredAt: new Date(),
+    type,
+    details,
+  })
+  
+// Some type utils
+type ExtractType<FactType extends Fact> = FactType extends Fact<infer Type, any> ? Type : never
+
+type ExtractDetails<FactType extends Fact> = FactType extends Fact<string, infer Details> ? Details : never
+
+```
+
+Les types génériques de `Fact` et `declareFact` demandent une certaine maitrise de typescript mais ne sont voués à être changés.
+Ils permettent d'avoir une déclaration plus simple de `NewPhotoAdded`.
+Enfin, les appels à `addToHistory` sont rendus plus concis et nous profitons de l'assistance de typescript dans l'IDE.
+
+Une dernière chose: les `details` d'un `Fact` doivent pouvoir être insérés dans une colonne de type `jsonb`. Cela veut dire que les `details` doivent être serialisables.
+Ajoutons donc une contrainte typescript sur le type `Details`, comme ceci:
+
+```ts
+//
+// addToHistory.ts
+type Literal = boolean | null | number | string
+type JSON = Literal | { [key: string]: JSON } | JSON[]
+
+type Fact<Type extends string = string, Details extends JSON = {}> = {
+  id: string
+  type: Type
+  occurredAt: Date
+  details: Details
+}
+```
+
+Pas de mauvaise surprise:
+```ts
+// 🛑 Does NOT compile
+type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+    addedOn: Date // 🚨 Date is not serializable
+  }
+>
+
+// ✅ Compiles
+type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+    addedOn: number // 👌 number is serializable
+  }
+>
+```
+
+#### Récapitulons
+
+Nous avons
+- un formulaire html pour uploader une photo,
+- de quoi stocker la photo,
+- et de quoi persister ce qu'il s'est passé.
+
+Pour la persistence, nous avons utilisé une stratégie alternative: nous sauvegardons des faits dans une seule table historique. Chaque *fait* demande une conception, n'avons nous pas échangé une modélisation de données pour une autre ?
+
+Pas tout à fait. La persistence sous forme de faits présente des avantages que nous allons voir dans la suite.
+
+Remarquons déjà:
+- Les différents faits sont déclarés dans des fichiers typescript
+  - Leur forme n'a pas de réalité dans la base de données
+- Nous sommes libres de modifier la forme des faits ou d'en rajouter, sans un seul appel sql (pas de migration)
+- La table historique est destinée à être en lecture seule
+  - Pas de perte de données possible !
+
+Mais pour l'instant, nous n'avons vu que l'aspect insertion, continuons plutôt notre exercice pour voir comment se présente le reste.
+
+### Page pour afficher la photo
+
+- Créons une page `PhotoPage.tsx` et testons la avec Storybook
+- Ajoutons une route `photo.route.ts` qui affiche la page `PhotoPage.tsx` (après une vérification sommaire)
+  - Nous faisons un select directement sur la table `history` pour vérifier que la photo existe
+- Redirigeons sur la route photo après chaque ajout de nouvelle photo
+
+
+Branchons maintenant sur un système de persistence de fichiers. Je prends ce que j'ai sous la main, qui permet d'uploader en local ou sur S3.
+
+#### Enfin, le sujet de la persistence !
+
+Nous arrivons au besoin de persister l'information autour de la photo qui vient d'être uploadée (quand, qui, quoi...) et c'était notre objectif de départ, à savoir "*est-ce que nous pouvons nous passer de modélisation de schéma de données ?*".
+
+Nous cherchons à rendre compatible les choses suivantes:
+- **Ne pas perdre d'information**
+  - Nous n'avons qu'une seule occasion d'écrire les informations dans leur intégralité, lors de l'execution d'une action.
+- **Ne pas polluer notre conception de persistence** avec des suppositions sur l'utilisation future de ces informations
+  - Les sujets de lecture et d'écriture sont souvent mélangées lorsque notre concevons notre db.
+  - **Si nous avons tout enregistré, nous pourrons toujours changer les requêtes en lecture**, impossible donc de faire une grosse erreur.
+
+La difficulté et l'enjeu de notre exercice est donc de penser à la persistence sans perte d'information, tout en mettant totalement de coté la manière dont nous allons nous en servir.
+
+A ce stade, nous serions sans doute partis sur une table `photos` avec des colonnes pour retenir:
+- Qui a uploadé cette photo (`userId`)
+- Quand (`Date.now()`)
+- Un identifiant (`photoId`)
+
+Et qu'on se pose des questions comme :
+- Est-ce qu'on utilise une clé étrangère pour lier la photo avec l'utilisateur ?
+
+Mais en faisant ça, on triche déjà en créant une entité `photo`.
+
+Non, tout ce qu'on sait, c'est ***qu'un utilisateur a ajouté une nouvelle photo***. C'est un **fait**.
+
+#### Conception de la persistence à base de faits
+
+Je nous propose de ne persister que des **faits** (ou `fact`) dans une table `history`.
+
+L'état à date de notre application sera représenté par son historique, c'est à dire l'ensemble des faits.  
+Le **fait** sera la seule primitive de persistence de notre application. Quand il se passe quelque chose, un fait sera ajouté à l'historique, l'équivalent d'un (ou plusieurs) `INSERT INTO photos VALUES...`.
+
+Le **fait** sera décrit par:
+- un `type`, simple `string` qui décrira le type de fait qui s'est déroulé
+  - ex: *un utilisateur a ajouté une nouvelle photo* ou `'NewPhotoAdded'` en réponse à la page `AddNewPhoto.tsx`.
+- une date d'occurence (`occurredAt` ? `happenedOn`? ...)
+- des `details` qui seront spécifiques au fait 
+  - ex: `addedBy` pour `NewPhotoAdded`
+  - un `jsonb` de postgres sera idéal
+
+Cette table unique aura donc une format simple. 
+On pourra faire des appels tout aussi simples:
+- Persister un fait: `INSERT INTO history VALUES...`.
+- Récupérer des faits: `SELECT * FROM history WHERE type='...';`
+
+Implémentation au plus simple:
+
+```ts
+//
+// src/utils/addToHistory.ts
+
+// To be called to persist each new Fact
+export const addToHistory = async ({ id, type, details, occurredAt }: Fact) => {
+  await postgres.query('INSERT INTO history (id, type, details, occurredAt) VALUES ($1, $2, $3, $4)', [
+    id,
+    type,
+    details,
+    occurredAt,
+  ])
+}
+
+
+type Fact = {
+  id: string
+  type: string
+  occurredAt: Date
+  details: any
+}
+
+// To be called once, at application launch (see server.ts)
+export const createHistoryTable = async () => {
+  return postgres.query(
+    `CREATE TABLE IF NOT EXISTS history (id UUID PRIMARY KEY, type VARCHAR(255) NOT NULL, details JSONB, "occurredAt" TIMESTAMPTZ NOT NULL);`
+  )
+}
+
+//
+// src/AddNewPhotoPage/addNewPhoto.route.ts
+
+const photoId = getUuid()
+await addToHistory({
+  id: getUuid(),
+  type: 'NewPhotoAdded',
+  occurredAt: new Date(),
+  details: {
+    photoId,
+    addedBy: request.session.user.id,
+  }
+})
+```
+Je pense que nous pouvons arranger les choses pour avoir un bel appel à `addToHistory`.
+Servons-nous de typescript !
+
+Ce qui est spécifique d'un fait à l'autre est `type` et `details`. `id` et `occurredAt` seront toujours traités de la même façon.
+
+Rendons `Fact` générique puis implémentons une fonction `makeFact` pour gérer les répétitions autour de `id` et `occurredAt`:
+
+```ts
+//
+// addToHistory.ts
+
+export type Fact<Type extends string = string, Details = any> = {
+  id: string
+  type: Type
+  occurredAt: Date
+  details: Details
+}
+
+
+export const makeFact =
+  <FactType extends Fact>(type: ExtractType<FactType>) =>
+  (details: ExtractDetails<FactType>) => ({
+    id: getUuid(),
+    occurredAt: new Date(),
+    type,
+    details,
+  })
+
+//
+// src/AddNewPhotoPage/NewPhotoAdded.ts
+
+type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+  }
+>
+
+const NewPhotoAdded = makeFact<NewPhotoAdded>('NewPhotoAdded')
+
+//
+// src/AddNewPhotoPage/addNewPhoto.route.ts
+
+const photoId = getUuid()
+await addToHistory(
+  NewPhotoAdded({
+    photoId,
+    addedBy: request.session.user.id,
+  })
+)
+
+```
+
+Bon, le typescript n'est pas forcément simple mais au moins l'appel à `addToHistory` l'est.
+On peut mettre de coté les types de `addToHistory` et se concentrer sur ses appels.
+
+Une dernière chose: les `details` d'un `Fact` doivent pouvoir être insérés dans une colonne de type `jsonb`. Cela veut dire que les `details` doivent être serialisables.
+Ajoutons donc une petite contrainte typescript sur le type `Details`, comme ceci:
+
+```ts
+//
+// addToHistory.ts
+type Literal = boolean | null | number | string
+type JSON = Literal | { [key: string]: JSON } | JSON[]
+
+type Fact<Type extends string = string, Details extends JSON = any> = {
+  id: string
+  type: Type
+  occurredAt: Date
+  details: Details
+}
+```
+
+Pas de mauvaise surprise:
+```ts
+// 🛑 Does NOT compile
+type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+    takenOn: Date // 🚨 Date is not serializable
+  }
+>
+
+// ✅ Compiles
+type NewPhotoAdded = Fact<
+  'NewPhotoAdded',
+  {
+    photoId: string
+    addedBy: string
+    takenOn: number // 👌 number is serializable
+  }
+>
+```
